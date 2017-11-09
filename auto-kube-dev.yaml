@@ -24,6 +24,6 @@
 
     - name: Make sure centos has $GOPATH set
       lineinfile:
-        path: /home/centos/.bashrc
+        path: "{{ user_home }}/.bashrc"
         regexp: GOPATH
         line: "export GOPATH={{ gopath }}/"

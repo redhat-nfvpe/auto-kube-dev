@@ -9,3 +9,4 @@ kubernetes_version: master
 
 # No trailing slash, please.
 gopath: /home/centos/gocode
+user_home: /home/centos/
