@@ -1,0 +1,12 @@
+---
+- name: Add go repo (http://go-repo.io/)
+  yum_repository:
+    name: go-repo
+    description: go-repo.io
+    gpgkey: https://mirror.go-repo.io/centos/RPM-GPG-KEY-GO-REPO
+    baseurl: https://mirror.go-repo.io/centos/$releasever/$basearch/
+
+- name: Install golang
+  yum:
+    name: golang
+    state: present

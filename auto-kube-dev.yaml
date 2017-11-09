@@ -1,5 +1,9 @@
 ---
 - hosts: all
+  become: true
+  become_user: root
   tasks: []
   roles:
     - { role: verify-environment, when: "perform_hardware_checks" }
+    - { role: install-deps-utils }
+    - { role: install-go }
