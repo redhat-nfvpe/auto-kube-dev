@@ -7,3 +7,22 @@
     - { role: verify-environment, when: "perform_hardware_checks" }
     - { role: install-deps-utils }
     - { role: install-go }
+
+- hosts: all
+  tasks:
+    - name: Make go path directory
+      file:
+        path: "{{ gopath }}/src/k8s.io"
+        state: directory
+
+    - name: Clone Kubernetes
+      git:
+        dest: "{{ gopath }}/src/k8s.io/kubernetes"
+        repo: "{{ kubernetes_repo_url }}"
+        version: "{{ kubernetes_version }}"
+
+    - name: Make sure centos has $GOPATH set
+      lineinfile:
+        path: /home/centos/.bashrc
+        regexp: GOPATH
+        line: "export GOPATH={{ gopath }}/"
