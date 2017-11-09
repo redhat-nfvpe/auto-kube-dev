@@ -56,3 +56,59 @@ In Doug's case, he spins up VMs for this environment [basically using this conce
 ```
 [root@droctagon2 ~]# qemu-img resize /home/images/big.CentOS-7-x86_64-GenericCloud.qcow2 +60G
 ```
+
+## A sample compilation of Kubernetes
+
+Some example build instructions from [Tomo](https://github.com/s1061123)! First, build the binaries, Tomo's quick method:
+
+```
+env KUBE_FASTBUILD=true KUBE_VERBOSE=8  ./build/run.sh make
+```
+
+Start a tmux session.
+
+```
+tmux new -s kuberun
+```
+
+Run a local cluster in that tmux session (do this as root).
+
+```
+[root@buildkube kubernetes]# ./hack/install-etcd.sh
+[root@buildkube kubernetes]# export PATH=$(pwd)/third_party/etcd:${PATH} 
+[root@buildkube kubernetes]# ip=$(ip a | grep 192.168.1. | awk '{print $2}' | sed -e 's|/24||')
+[root@buildkube kubernetes]# LOG_LEVEL=4 API_HOST=$ip ENABLE_RBAC=true ./hack/local-up-cluster.sh -o _output/dockerized/bin/linux/amd64/
+```
+
+Exit that tmux session (`ctrl+b, d`).
+
+Now... Try to use it. Note: Don't do this as root, it won't work.
+
+```
+[centos@buildkube kubernetes]$   export KUBECONFIG=/var/run/kubernetes/admin.kubeconfig
+export KUBECONFIG=/var/run/kubernetes/admin.kubeconfig
+[centos@buildkube kubernetes]$   cluster/kubectl.sh get nodes
+No resources found.
+```
+
+For fun, start a pod. Run a test using [the pod from this gist](https://gist.github.com/dougbtv/e407fb95fe19de05637e5be9a0e4b252)
+
+```
+[centos@buildkube kubernetes]$   cluster/kubectl.sh create -f ~/debug.yaml 
+replicationcontroller "debugging" created
+[centos@buildkube kubernetes]$ watch -n1 cluster/kubectl.sh get pods -o wide --all-namespaces
+```
+
+And you can see if that's doing anything...
+
+```
+[centos@buildkube kubernetes]$ cluster/kubectl.sh get pods
+NAME              READY     STATUS    RESTARTS   AGE
+debugging-m8c4p   1/1       Running   0          4m
+[centos@buildkube kubernetes]$ cluster/kubectl.sh exec -it debugging-m8c4p -- ping -c2 4.2.2.2 
+PING 4.2.2.2 (4.2.2.2) 56(84) bytes of data.
+64 bytes from 4.2.2.2: icmp_seq=1 ttl=57 time=11.2 ms
+64 bytes from 4.2.2.2: icmp_seq=2 ttl=57 time=10.5 ms
+```
+
+And there you have it.
