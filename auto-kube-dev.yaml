@@ -1,0 +1,5 @@
+---
+- hosts: all
+  tasks: []
+  roles:
+    - { role: verify-environment, when: "perform_hardware_checks" }

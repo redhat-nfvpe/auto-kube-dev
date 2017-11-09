@@ -1,0 +1,3 @@
+perform_hardware_checks: true
+recommend_ram_mb: 24576
+recommend_free_disk_gb: 30.1

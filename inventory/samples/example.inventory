@@ -1,0 +1,7 @@
+devhost ansible_host=192.168.1.251
+
+[all:vars]
+ansible_ssh_user=centos
+# ansible_become=true
+# ansible_become_user=root
+ansible_ssh_private_key_file=/home/doug/.ssh/id_testvms
