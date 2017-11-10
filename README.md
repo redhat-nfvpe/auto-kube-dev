@@ -13,6 +13,8 @@ Assumes a CentOS 7 machine.
 3. ????
 4. Profit.
 
+## Example playbook run
+
 Here's a sample run of the playbook:
 
 ```
@@ -49,7 +51,7 @@ At very least, it should be able to run a `./hack/verify-bazel.sh`. (It should r
 
 Recommended: 24 gigs of RAM, and 30 gigs HDD space free in the root.
 
-This playbook assumes a CentOS 7.
+This playbook assumes a CentOS 7 machine.
 
 In Doug's case, he spins up VMs for this environment [basically using this concept](http://giovannitorres.me/create-a-linux-lab-on-kvm-using-cloud-images.html), and does something to resize the qcow2 image like:
 
@@ -57,7 +59,7 @@ In Doug's case, he spins up VMs for this environment [basically using this conce
 [root@droctagon2 ~]# qemu-img resize /home/images/big.CentOS-7-x86_64-GenericCloud.qcow2 +60G
 ```
 
-## A sample compilation of Kubernetes
+## A sample compilation & run of Kubernetes
 
 Some example build instructions from [Tomo](https://github.com/s1061123)! First, build the binaries, Tomo's quick method:
 
@@ -71,7 +73,7 @@ Start a tmux session.
 tmux new -s kuberun
 ```
 
-Run a local cluster in that tmux session (do this as root).
+Run a local cluster in that tmux session (do this as root). Double check that the `$ip` variable works for you in your scenario.
 
 ```
 [root@buildkube kubernetes]# ./hack/install-etcd.sh
@@ -96,6 +98,11 @@ For fun, start a pod. Run a test using [the pod from this gist](https://gist.git
 ```
 [centos@buildkube kubernetes]$   cluster/kubectl.sh create -f ~/debug.yaml 
 replicationcontroller "debugging" created
+```
+
+Watch that pod come up.
+
+```
 [centos@buildkube kubernetes]$ watch -n1 cluster/kubectl.sh get pods -o wide --all-namespaces
 ```
 
@@ -111,4 +118,4 @@ PING 4.2.2.2 (4.2.2.2) 56(84) bytes of data.
 64 bytes from 4.2.2.2: icmp_seq=2 ttl=57 time=10.5 ms
 ```
 
-And there you have it.
+And there you have it!

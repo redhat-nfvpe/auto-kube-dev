@@ -1,0 +1,31 @@
+---
+
+- name: Install the 'Development' package group
+  yum:
+    name: "@development"
+    state: present
+
+- name: Install deps for Bazel
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - gcc-c++
+    - glibc-static
+    - libstdc++-static
+
+- name: Add copr repo for bazel
+  yum_repository:
+    name: copr
+    description: copr for bazel
+    gpgkey: https://copr-be.cloud.fedoraproject.org/results/vbatts/bazel/pubkey.gpg
+    baseurl: https://copr-be.cloud.fedoraproject.org/results/vbatts/bazel/epel-7-$basearch/
+
+- name: Install bazel
+  yum:
+    name: bazel
+    state: present
+
+- name: Run bazel to init it.
+  shell: >
+    bazel help
