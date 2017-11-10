@@ -2,7 +2,7 @@
 
 Automate the creation of a Kubernetes development environment.
 
-It'll do somethings that you just don't wanna do ad-nauseam -- like install golang (and set your gopath), docker, and clone Kubernetes into the right spot, and have you set you can start hackin' instead of yak shaving (sorry, you'll still yak shave, too).
+It'll do somethings that you just don't wanna do ad-nauseam -- like install golang (and set your gopath), docker, and clone Kubernetes into the right spot. With that all set you can start hackin' instead of yak shaving (sorry, you'll still yak shave, too).
 
 Assumes a CentOS 7 machine.
 
