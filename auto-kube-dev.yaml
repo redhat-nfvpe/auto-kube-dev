@@ -1,30 +1,11 @@
 ---
 - hosts: all
-  become: true
-  become_user: root
   tasks: []
   roles:
     - { role: verify-environment, when: "perform_hardware_checks" }
-    - { role: install-deps-utils }
-    - { role: docker-install }
-    - { role: install-bazel }
+    - { role: install-deps-utils, become: true, become_user: "root" }
     - { role: install-go }
-
-- hosts: all
-  tasks:
-    - name: Make go path directory
-      file:
-        path: "{{ gopath }}/src/k8s.io"
-        state: directory
-
-    - name: Clone Kubernetes
-      git:
-        dest: "{{ gopath }}/src/k8s.io/kubernetes"
-        repo: "{{ kubernetes_repo_url }}"
-        version: "{{ kubernetes_version }}"
-
-    - name: Make sure centos has $GOPATH set
-      lineinfile:
-        path: "{{ user_home }}/.bashrc"
-        regexp: GOPATH
-        line: "export GOPATH={{ gopath }}/"
+    - { role: install-docker, become: true, become_user: "root" }
+    - { role: install-bazel, when: "use_bazel_rpm" }
+    - { role: install-planter, when: "use_planter" }
+    - { role: setup-repos }

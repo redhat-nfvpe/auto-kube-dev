@@ -25,10 +25,21 @@
     dest: /etc/systemd/system/docker.service.d/override.conf
 
 - name: Reload systemd units
-  command: systemctl daemon-reload
+  systemd:
+    daemon_reload: yes
 
-- name: Enable and start docker
-  service:
+- name: Add 'docker' group
+  group:
     name: docker
-    enabled: yes
+    state: present
+
+- name: Add ansible_user to 'docker' group
+  user:
+    name: "{{ ansible_user }}"
+    group: docker
+
+- name: Start and enable Docker service
+  systemd:
+    name: docker.service
     state: started
+    enabled: yes

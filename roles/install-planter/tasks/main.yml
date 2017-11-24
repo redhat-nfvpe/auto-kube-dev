@@ -1,0 +1,6 @@
+---
+- name: Symlink planter back to k8sio repo
+  file:
+    state: link
+    src: "{{ ansible_env.HOME }}/{{ gopath }}/src/k8s.io/test-infra/planter"
+    dest: "{{ ansible_env.HOME }}/{{ gopath }}/src/k8s.io/planter"

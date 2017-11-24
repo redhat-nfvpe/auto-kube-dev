@@ -1,0 +1,12 @@
+---
+- name: Clone Kubernetes
+  git:
+    dest: "{{ gopath }}/src/k8s.io/kubernetes"
+    repo: "{{ kubernetes_repo_url }}"
+    version: "{{ kubernetes_version }}"
+
+- name: Clone Kubernetes Test Infra
+  git:
+    dest: "{{ gopath }}/src/k8s.io/test-infra"
+    repo: "{{ testinfra_repo_url }}"
+    version: "{{ testinfra_version }}"

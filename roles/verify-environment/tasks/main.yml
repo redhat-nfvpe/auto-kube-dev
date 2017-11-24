@@ -8,19 +8,19 @@
 
 - name: Test for available disk space
   assert:
-    that: 
+    that:
       - not (item.mount == '/' and (item.size_available < (recommend_free_disk_gb * 1000000000) - ((recommend_free_disk_gb * 1000000000)*0.1) ) )
   with_items: "{{ansible_mounts}}"
   ignore_errors: yes
   register: disk_free
 
 - name: Fail when there's not enough free disk space (with 10% slack)
-  fail: 
+  fail:
     msg: "There's apparently not enough free disk space."
   when: disk_free|failed
 
 - name: Fail when there's not enough RAM (with 10% slack)
-  fail: 
+  fail:
     msg: "There's not enough recommended ram"
   # Allow a 10% mismatch.
   when: ansible_memory_mb.real.total < (recommend_ram_mb - (recommend_ram_mb * 0.1))
