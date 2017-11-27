@@ -2,7 +2,10 @@
 
 Automate the creation of a Kubernetes development environment.
 
-It'll do somethings that you just don't wanna do ad-nauseam -- like install golang (and set your gopath), docker, and clone Kubernetes into the right spot. With that all set you can start hackin' instead of yak shaving (sorry, you'll still yak shave, too).
+It'll do somethings that you just don't wanna do ad-nauseam -- like install
+golang (and set your gopath), docker, and clone Kubernetes into the right spot.
+With that all set you can start hackin' instead of yak shaving (sorry, you'll
+still yak shave, too).
 
 Assumes a CentOS 7 machine.
 
@@ -18,30 +21,35 @@ Assumes a CentOS 7 machine.
 Here's a sample run of the playbook:
 
 ```
-$ ansible-playbook -i inventory/samples/example.inventory auto-kube-dev.yaml 
+$ ansible-playbook -i inventory/examples/example.inventory -e 'use_bazel_rpm=true' auto-kube-dev.yaml
 ```
 
-Or if you don't want to check the hardware requirements, go ahead and skip that like so:
+Or if you don't want to check the hardware requirements, go ahead and skip that
+like so:
 
 ```
-$ ansible-playbook -i inventory/samples/example.inventory auto-kube-dev.yaml  -e 'perform_hardware_checks=false'
+$ ansible-playbook -i inventory/examples/example.inventory auto-kube-dev.yaml  -e 'perform_hardware_checks=false' -e 'use_bazel_rpm=true'
 ```
 
 ## Cloning the right repo
 
-By default, we'll clone Kubernetes at master HEAD, but... There's a good chance you'll want to clone your own fork, or clone at a different branch or tag. So, you can specify that, too.
+By default, we'll clone Kubernetes at master HEAD, but... There's a good chance
+you'll want to clone your own fork, or clone at a different branch or tag. So,
+you can specify that, too.
 
 ```
-$ ansible-playbook -i inventory/samples/example.inventory auto-kube-dev.yaml -e 'kubernetes_version=v1.8.1' -e 'kubernetes_repo_url=https://github.com/kubernetes/kubernetes.git'
+$ ansible-playbook -i inventory/examples/example.inventory auto-kube-dev.yaml -e 'kubernetes_version=v1.8.1' -e 'kubernetes_repo_url=https://github.com/kubernetes/kubernetes.git' -e 'use_bazel_rpm=true'
 ```
 
 ## Verifying this playbook got it right.
 
-At very least, it should be able to run a `./hack/verify-bazel.sh`. (It should run, but, the success of which depends on the health of the branch you have checked out, try the `v1.8.1` tag for a good chance of it completing)
+At very least, it should be able to run a `./hack/verify-bazel.sh`. (It should
+run, but, the success of which depends on the health of the branch you have
+checked out, try the `v1.8.1` tag for a good chance of it completing)
 
 ```
 [centos@urbuildhost kubernetes]$ pwd
-/home/centos/gocode/src/k8s.io/kubernetes
+/home/centos/src/go/src/k8s.io/kubernetes
 [centos@urbuildhost kubernetes]$ ./hack/verify-bazel.sh 
 [centos@urbuildhost kubernetes]$ echo $?
 0
@@ -53,7 +61,8 @@ Recommended: 24 gigs of RAM, and 30 gigs HDD space free in the root.
 
 This playbook assumes a CentOS 7 machine.
 
-In Doug's case, he spins up VMs for this environment [basically using this concept](http://giovannitorres.me/create-a-linux-lab-on-kvm-using-cloud-images.html), and does something to resize the qcow2 image like:
+In Doug's case, he spins up VMs for this environment [basically using this concept](http://giovannitorres.me/create-a-linux-lab-on-kvm-using-cloud-images.html),
+and does something to resize the qcow2 image like:
 
 ```
 [root@droctagon2 ~]# qemu-img resize /home/images/big.CentOS-7-x86_64-GenericCloud.qcow2 +60G
@@ -61,7 +70,8 @@ In Doug's case, he spins up VMs for this environment [basically using this conce
 
 ## A sample compilation & run of Kubernetes
 
-Some example build instructions from [Tomo](https://github.com/s1061123)! First, build the binaries, Tomo's quick method:
+Some example build instructions from [Tomo](https://github.com/s1061123)!
+First, build the binaries, Tomo's quick method:
 
 ```
 env KUBE_FASTBUILD=true KUBE_VERBOSE=8  ./build/run.sh make
@@ -73,7 +83,8 @@ Start a tmux session.
 tmux new -s kuberun
 ```
 
-Run a local cluster in that tmux session (do this as root). Double check that the `$ip` variable works for you in your scenario.
+Run a local cluster in that tmux session (do this as root). Double check that
+the `$ip` variable works for you in your scenario.
 
 ```
 [root@buildkube kubernetes]# ./hack/install-etcd.sh
