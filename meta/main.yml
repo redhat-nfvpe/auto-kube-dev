@@ -1,0 +1,6 @@
+---
+dependencies: []
+
+galaxy_info:
+  author: redhat-nfvpe
+  description: "Instantiates a build environment for k8s development"
