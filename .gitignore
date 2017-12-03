@@ -1,2 +1,8 @@
 inventory/*
 !inventory/examples/
+roles/*
+!roles/install-bazel
+!roles/install-deps-utils
+!roles/install-planter
+!roles/setup-repos
+!roles/verify-environment
