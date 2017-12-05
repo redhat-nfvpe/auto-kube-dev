@@ -5,6 +5,11 @@
     src: "{{ ansible_env.HOME }}/{{ gopath }}/src/k8s.io/test-infra/planter"
     dest: "{{ ansible_env.HOME }}/{{ gopath }}/src/k8s.io/planter"
 
+- name: Install python-selinux
+  package:
+    name: libselinux-python
+    state: present
+
 - name: Set SELinux to permissive for build
   become: true
   become_user: root
