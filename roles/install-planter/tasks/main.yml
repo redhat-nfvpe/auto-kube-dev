@@ -4,3 +4,10 @@
     state: link
     src: "{{ ansible_env.HOME }}/{{ gopath }}/src/k8s.io/test-infra/planter"
     dest: "{{ ansible_env.HOME }}/{{ gopath }}/src/k8s.io/planter"
+
+- name: Set SELinux to permissive for build
+  become: true
+  become_user: root
+  selinux:
+    policy: targeted
+    state: permissive
