@@ -1,0 +1,9 @@
+---
+  roles:
+    - { role: verify-environment, when: "perform_hardware_checks" }
+    - { role: install-deps-utils, become: true, become_user: "root" }
+    - { role: install-go }
+    - { role: install-docker, become: true, become_user: "root" }
+    - { role: setup-repos }
+    - { role: install-bazel, when: "use_bazel_rpm" }
+    - { role: install-planter, when: "use_planter" }
