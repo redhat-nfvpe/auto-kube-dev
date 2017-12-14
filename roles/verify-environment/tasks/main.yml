@@ -6,6 +6,11 @@
 # - debug:
 #     msg: "This is the disk info: {{ansible_mounts}}"
 
+- name: Look for environment verification semaphore file
+  stat:
+    path: "{{ ansible_env.HOME }}/.assertions_ok"
+  register: stat_assertions_semaphore
+
 - name: Test for available disk space
   assert:
     that:
@@ -17,10 +22,16 @@
 - name: Fail when there's not enough free disk space (with 10% slack)
   fail:
     msg: "There's apparently not enough free disk space."
-  when: disk_free|failed
+  when: disk_free|failed and not stat_assertions_semaphore.stat.exists
 
 - name: Fail when there's not enough RAM (with 10% slack)
   fail:
     msg: "There's not enough recommended ram"
   # Allow a 10% mismatch.
-  when: ansible_memory_mb.real.total < (recommend_ram_mb - (recommend_ram_mb * 0.1))
+  when: (ansible_memory_mb.real.total < (recommend_ram_mb - (recommend_ram_mb * 0.1))) and not stat_assertions_semaphore.stat.exists
+
+- name: Set semaphore to mark environment assertions complete
+  file:
+    path: "{{ ansible_env.HOME }}/.assertions_ok"
+    state: touch
+  when: not stat_assertions_semaphore.stat.exists
