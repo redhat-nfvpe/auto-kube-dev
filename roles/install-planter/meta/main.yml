@@ -1,4 +1,2 @@
 ---
-dependencies:
-  - { role: install-go }
-  - { role: install-docker }
+dependencies: []
